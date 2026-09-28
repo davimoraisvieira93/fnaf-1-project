@@ -28,6 +28,22 @@
 	  width: 600px;
 	  margin-left: -260px
   }
+
+  /* Tela de carregamento personalizada (cobre o loading do Clickteam) */
+  #preloader {
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  z-index: 9999;
+	  background: #000 url("preloader.png") center center / contain no-repeat;
+	  transition: opacity 0.5s;
+  }
+  #preloader.hide {
+	  opacity: 0;
+	  pointer-events: none;
+  }
 </style>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -75,6 +91,9 @@
 
 <body>
 
+<!-- Tela de carregamento fixa: imagem preloader.png (na mesma pasta do index.html) -->
+<div id="preloader"></div>
+
 <div style="display: inline-block; -webkit-user-select: none; text-align: left;">
     <canvas id="MMFCanvas" width="1280" height="720">
     	Your browser does not support Canvas.
@@ -88,6 +107,17 @@
         window.addEventListener("load", windowLoaded, false);
         function windowLoaded()
         {
+            // Tempo (em milissegundos) que a tela preloader.png fica visível.
+            // Aumente se o jogo demorar mais para carregar.
+            var TEMPO = 4000;
+
+            setTimeout(function () {
+                var p = document.getElementById("preloader");
+                if (!p) return;
+                p.classList.add("hide");
+                setTimeout(function () { p.remove(); }, 600);
+            }, TEMPO);
+
             // Calls the runtime
             // First parameter : name of the canvas element
             // Second parameter : path to the cch file. Images and sounds must lay beside this file
